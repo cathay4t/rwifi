@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
-use crate::WifiError;
+use crate::{WifiError, WifiIface};
 
 use zbus::zvariant;
 
@@ -33,7 +33,7 @@ impl WpaDbusConnection<'_> {
         Ok(Self { connection, proxy })
     }
 
-    pub(crate) async fn get_ifaces(&self) -> Result<Vec<String>, WifiError> {
+    pub(crate) async fn get_ifaces(&self) -> Result<Vec<WifiIface>, WifiError> {
         let obj_paths: Vec<String> = self
             .proxy
             .interfaces()
@@ -43,13 +43,15 @@ impl WpaDbusConnection<'_> {
             .collect();
         let mut ret = Vec::new();
         for obj_path in obj_paths {
-            ret.push(self.get_ifname(obj_path.as_str()).await?);
+            ret.push(self.get_iface(obj_path.as_str()).await?);
         }
 
         Ok(ret)
     }
 }
 
-fn obj_path_to_string(obj_path: zvariant::OwnedObjectPath) -> String {
+pub(crate) fn obj_path_to_string(
+    obj_path: zvariant::OwnedObjectPath,
+) -> String {
     obj_path.into_inner().to_string()
 }

@@ -18,7 +18,6 @@ impl WpaSupplicantConnection<'_> {
     }
 
     pub async fn get_ifaces(&self) -> Result<Vec<WifiIface>, WifiError> {
-        println!("HAHA {:?}", self.dbus.get_ifaces().await?);
-        Ok(Vec::new())
+        self.dbus.get_ifaces().await
     }
 }

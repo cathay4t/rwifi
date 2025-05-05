@@ -6,6 +6,7 @@ pub enum ErrorKind {
     #[default]
     Bug,
     DbusError,
+    Utf8Error,
 }
 
 impl std::fmt::Display for ErrorKind {
@@ -38,6 +39,15 @@ impl From<zbus::Error> for WifiError {
     fn from(e: zbus::Error) -> Self {
         Self {
             kind: ErrorKind::DbusError,
+            msg: e.to_string(),
+        }
+    }
+}
+
+impl From<std::str::Utf8Error> for WifiError {
+    fn from(e: std::str::Utf8Error) -> Self {
+        Self {
+            kind: ErrorKind::Utf8Error,
             msg: e.to_string(),
         }
     }

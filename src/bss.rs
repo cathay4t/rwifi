@@ -5,5 +5,4 @@
 pub struct WifiIface {
     pub name: String,
     pub ssid: Option<String>,
-    pub bssid: Option<[u8; 6]>,
 }
